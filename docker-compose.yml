@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  web:
+    build: ./web
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    volumes:
+      - .:/water_watch
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile_db
+    restart: always
+    env_file: .env
+    volumes:
+      - db_postgres:/var/lib/postgresql/data
+
+volumes:
+  db_postgres:
